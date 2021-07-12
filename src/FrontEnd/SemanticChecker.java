@@ -230,7 +230,7 @@ public class SemanticChecker implements ASTvisitor {
         }
         if (it.name.type.is_string() && it.flag_func && it.id.equals("substring")) {
             Funcsymbol tmp = new Funcsymbol("substring");
-            tmp.type = new Literaltype("int");
+            tmp.type = new Literaltype("string");
             tmp.para_list.add(new Varsymbol("left", new Literaltype("int")));
             tmp.para_list.add(new Varsymbol("right", new Literaltype("int")));
             it.type = tmp;

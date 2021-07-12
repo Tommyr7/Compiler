@@ -38,6 +38,11 @@ public class SymbolCollector implements ASTvisitor {
             global.func_map.put("printlnInt", tmp);
         }
         {
+            Funcsymbol tmp = new Funcsymbol("getInt");
+            tmp.type = new Literaltype("int");
+            global.func_map.put("getInt", tmp);
+        }
+        {
             Funcsymbol tmp = new Funcsymbol("getString");
             tmp.type = new Literaltype("string");
             global.func_map.put("getString", tmp);
