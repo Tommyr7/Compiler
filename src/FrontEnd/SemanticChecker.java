@@ -216,7 +216,7 @@ public class SemanticChecker implements ASTvisitor {
     @Override
     public void visit(Classexpr it) {
         it.name.accept(this);
-        if (it.name.type instanceof ArrayType && it.flag_func && it.id.equals("size")) {
+        if (it.name.type instanceof Arraytype && it.flag_func && it.id.equals("size")) {
             Funcsymbol tmp = new Funcsymbol("size");
             tmp.type = new Literaltype("int");
             it.type = tmp;
