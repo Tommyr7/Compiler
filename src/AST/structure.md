@@ -1,0 +1,41 @@
+- AST_node
+    - Def_node
+        - class_def
+        - function_def
+    - Expr_node
+        - binary_expr
+        - bool_expr
+        - function_expr
+        - int_expr
+        - class_expr
+        - new_expr
+        - null_expr
+        - prefix_expr
+        - string_expr
+        - arr_expr
+        - suffix_expr
+        - this_expr
+        - var_expr
+        - exprlist_expr
+    - Program_node
+    - Statement_node
+        - part_statement
+        - break_statement
+        - continue_statement
+        - empty_statement
+        - for_statement
+        - if_statement
+        - expr_statement
+        - return_statement
+        - while_statement
+        - vardef_statement
+        - vardefsub_statement
+    - Type_node
+- AST_visitor
+- Type
+    - Array_type
+    - Class_type
+    - Literal_type
+
+- Var_symbol
+- Func_symbol
