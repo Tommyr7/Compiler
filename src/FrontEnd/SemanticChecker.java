@@ -68,9 +68,9 @@ public class SemanticChecker implements ASTvisitor {
         if (it.type == null) res_type = new Literaltype("void");
         else res_type = scope.get_type(it.type);
         it.part.accept(this);
+        it.flag_return = flag;
         if (it.id.equals("main")) flag = true;
         if (!flag && it.type != null && !it.type.type.equals("void")) throw new semanticError("No return!", it.pos);
-        it.flag_return = flag;
         now_scope = now_scope.parent_scope;
     }
 
