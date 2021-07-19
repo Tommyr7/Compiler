@@ -1,9 +1,6 @@
 package ASM.inst;
 
-import ASM.operand.Address;
-import ASM.operand.Operand;
-import ASM.operand.Symbol;
-import ASM.operand.Vreg;
+import ASM.operand.*;
 
 import java.io.PrintStream;
 
@@ -17,13 +14,25 @@ public class Move extends Inst {
 
     @Override
     public void print(PrintStream prt) {
-        if (rs instanceof Vreg) prt.println("\tlw t1, " + printVreg(4 * (1 + ((Vreg) rs).id)));
-        if (rs instanceof Symbol) prt.println("\tlw t1, " + ((Symbol) rs).id);
-        if (rs instanceof Address) prt.println("\tlw t1, 0(t1)");
+        if (rs instanceof Vreg && rs.color==null)
+        {
+            prt.println("\tlw t3, " + printVreg(4 * (1 + ((Vreg) rs).id)));
+            rs.color=new Preg("t3");
+        }
+        if (rs instanceof Symbol && rs.color==null)
+        {
+            prt.println("\tlw t3, " + ((Symbol) rs).id);
+            rs.color=new Preg("t3");
+        }
+        if (rs instanceof Address) prt.println("\tlw "+rs.toString()+", 0("+rs.toString()+")");
+        if ((rd instanceof Vreg||rd instanceof Symbol)&&rd.color==null) rd.color=new Preg("t4");
+        prt.println("\tmv "+rd.toString()+","+rs.toString());
         if (rd instanceof Address) {
-            prt.println("\tlw t3, " + printVreg(4 * (1 + ((Address) rd).id)));
-            prt.println("\tsw t1, 0(t3)");
-        } else if (rd instanceof Symbol) prt.println("\tsw t1, " + (((Symbol) rd).id) + ", t3");
-        else if (rd instanceof Vreg) prt.println("\tsw t1, " + printVreg(4 * (1 + ((Vreg) rd).id)));
+            prt.println("\tlw t5, " + printVreg(4 * (1 + ((Address) rd).id)));
+            prt.println("\tsw "+rs.toString()+", 0(t5)");
+        } else if (rd instanceof Symbol) prt.println("\tsw "+rs.toString()+", " + (((Symbol) rd).id) + ", t5");
+        else if (rd instanceof Vreg) prt.println("\tsw "+rs.toString()+", " + printVreg(4 * (1 + ((Vreg) rd).id)));
+        rs.color=null;
+        rd.color=null;
     }
 }

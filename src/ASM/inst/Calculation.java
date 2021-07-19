@@ -1,9 +1,6 @@
 package ASM.inst;
 
-import ASM.operand.Address;
-import ASM.operand.Operand;
-import ASM.operand.Symbol;
-import ASM.operand.Vreg;
+import ASM.operand.*;
 
 import java.io.PrintStream;
 
@@ -20,17 +17,37 @@ public class Calculation extends Inst {
 
     @Override
     public void print(PrintStream prt) {
-        if (rs1 instanceof Vreg) prt.println("\tlw t1, " + printVreg(4 * (1 + ((Vreg) rs1).id)));
-        if (rs1 instanceof Symbol) prt.println("\tlw t1, " + ((Symbol) rs1).id);
-        if (rs1 instanceof Address) prt.println("\tlw t1, 0(t1)");
-        if (rs2 instanceof Vreg) prt.println("\tlw t2, " + printVreg(4 * (1 + ((Vreg) rs2).id)));
-        if (rs2 instanceof Symbol) prt.println("\tlw t2, " + ((Symbol) rs2).id);
-        if (rs2 instanceof Address) prt.println("\tlw t2, 0(t2)");
-        prt.println("\t" + op + " t3, t1" + (rs2 == null ? "" : ", t2"));
+        if (rs1 instanceof Vreg && rs1.color==null)
+        {
+            prt.println("\tlw t3, " + printVreg(4 * (1 + ((Vreg) rs1).id)));
+            rs1.color=new Preg("t3");
+        }
+        if (rs1 instanceof Symbol && rs1.color==null)
+        {
+            prt.println("\tlw t3, " + ((Symbol) rs1).id);
+            rs1.color=new Preg("t3");
+        }
+        if (rs1 instanceof Address) prt.println("\tlw "+rs1.toString()+", 0("+rs1.toString()+")");
+        if (rs2 instanceof Vreg && rs2.color==null)
+        {
+            prt.println("\tlw t4, " + printVreg(4 * (1 + ((Vreg) rs2).id)));
+            rs2.color=new Preg("t4");
+        }
+        if (rs2 instanceof Symbol && rs2.color==null)
+        {
+            prt.println("\tlw t4, " + ((Symbol) rs2).id);
+            rs2.color=new Preg("t4");
+        }
+        if (rs2 instanceof Address) prt.println("\tlw "+rs2.toString()+", 0("+rs2.toString()+")");
+        if ((rd instanceof Vreg||rd instanceof Symbol)&&rd.color==null) rd.color=new Preg("t5");
+        prt.println("\t" + op + " "+rd.toString()+", "+rs1.toString()+ (rs2 == null ? "" : ", "+rs2.toString()));
         if (rd instanceof Address) {
-            prt.println("\tlw t4, " + printVreg(4 * (1 + ((Address) rd).id)));
-            prt.println("\tsw t3, 0(t4)");
-        } else if (rd instanceof Symbol) prt.println("\tsw t3, " + (((Symbol) rd).id) + ", t4");
-        else if (rd instanceof Vreg) prt.println("\tsw t3, " + printVreg(4 * (1 + ((Vreg) rd).id)));
+            prt.println("\tlw t6, " + printVreg(4 * (1 + ((Address) rd).id)));
+            prt.println("\tsw "+rd.toString()+", 0(t6)");
+        } else if (rd instanceof Symbol) prt.println("\tsw "+rd.toString()+", " + (((Symbol) rd).id) + ", t6");
+        else if (rd instanceof Vreg) prt.println("\tsw "+rd.toString()+", " + printVreg(4 * (1 + ((Vreg) rd).id)));
+        rs1.color=null;
+        if (rs2!=null) rs2.color=null;
+        rd.color=null;
     }
 }

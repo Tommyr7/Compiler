@@ -1,9 +1,6 @@
 package ASM.inst;
 
-import ASM.operand.Address;
-import ASM.operand.Operand;
-import ASM.operand.Symbol;
-import ASM.operand.Vreg;
+import ASM.operand.*;
 
 import java.io.PrintStream;
 
@@ -17,14 +14,25 @@ public class Load extends Inst {
 
     @Override
     public void print(PrintStream prt) {
-        if (addr instanceof Vreg) prt.println("\tlw t1, " + printVreg(4 * (1 + ((Vreg) addr).id)));
-        if (addr instanceof Symbol) prt.println("\tlw t1, " + ((Symbol) addr).id);
-        if (addr instanceof Address) prt.println("\tlw t1, 0(t1)");
-        prt.println("\tlw t2, 0(t1)");
+        if (addr instanceof Vreg && addr.color==null)
+        {
+            prt.println("\tlw t3, " + printVreg(4 * (1 + ((Vreg) addr).id)));
+            addr.color=new Preg("t3");
+        }
+        if (addr instanceof Symbol && addr.color==null)
+        {
+            prt.println("\tlw t3, " + addr.toString());
+            addr.color=new Preg("t3");
+        }
+        if (addr instanceof Address) prt.println("\tlw "+addr.toString()+", 0("+addr.toString()+")");
+        if ((rd instanceof Vreg||rd instanceof Symbol)&&rd.color==null) rd.color=new Preg("t4");
+        prt.println("\tlw "+rd.toString()+", 0("+addr.toString()+")");
         if (rd instanceof Address) {
-            prt.println("\tlw t3, " + printVreg(4 * (1 + ((Address) rd).id)));
-            prt.println("\tsw t2, 0(t3)");
-        } else if (rd instanceof Symbol) prt.println("\tsw t2, " + (((Symbol) rd).id) + ", t3");
-        else if (rd instanceof Vreg) prt.println("\tsw t2, " + printVreg(4 * (1 + ((Vreg) rd).id)));
+            prt.println("\tlw t5, " + printVreg(4 * (1 + ((Address) rd).id)));
+            prt.println("\tsw "+rd.toString()+", 0(t5)");
+        } else if (rd instanceof Symbol) prt.println("\tsw "+rd.toString()+", " + (((Symbol) rd).id) + ", t5");
+        else if (rd instanceof Vreg) prt.println("\tsw "+rd.toString()+", " + printVreg(4 * (1 + ((Vreg) rd).id)));
+        rd.color=null;
+        addr.color=null;
     }
 }

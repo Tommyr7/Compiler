@@ -6,4 +6,9 @@ public class Immediate extends Operand {
     public Immediate(int _val) {
         val = _val;
     }
+
+    @Override
+    public String toString() {
+        return val+"";
+    }
 }

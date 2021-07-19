@@ -6,4 +6,9 @@ public class Vreg extends Reg {
     public Vreg(int _id) {
         id = _id;
     }
+
+    @Override
+    public String toString() {
+        return color.id;
+    }
 }
