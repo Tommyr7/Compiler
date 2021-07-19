@@ -21,7 +21,7 @@ public class ASMBlockList {
         for (int i = 0; i < vars.size(); i++) {
             String str = vars.get(i);
             prt.println("\t.globl\t" + str);
-            prt.println("\t.type\t" + str + ", @Object");
+            prt.println("\t.type\t" + str + ", @object");
             prt.println(str + ":");
             prt.println("\t.zero\t4");
             prt.println("\t.size\t" + str + ", 4");

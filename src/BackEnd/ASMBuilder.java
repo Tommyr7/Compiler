@@ -220,114 +220,118 @@ public class ASMBuilder implements ASTvisitor {
             now_block.inst.add(new Label(true_statement));
             now_block.inst.add(new Li(it.vreg_id, new Immediate(1)));
             now_block.inst.add(new Label(end_statement));
-        } else if (it.op.equals("*")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "mul"));
-        } else if (it.op.equals("/")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "div"));
-        } else if (it.op.equals("%")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "rem"));
-        } else if (it.op.equals("+")) {
-            if (it.src1.type.is_string()) {
+        } else {
+            it.src1.accept(this);
+            it.src2.accept(this);
+            if (it.op.equals("*")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_add"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "mul"));
+            } else if (it.op.equals("/")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "add"));
-            }
-        } else if (it.op.equals("-")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sub"));
-        } else if (it.op.equals("<<")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sll"));
-        } else if (it.op.equals(">>")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sra"));
-        } else if (it.op.equals("<")) {
-            if (it.src1.type.is_string()) {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "div"));
+            } else if (it.op.equals("%")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_lt"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "rem"));
+            } else if (it.op.equals("+")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_add"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "add"));
+                }
+            } else if (it.op.equals("-")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "slt"));
-            }
-        } else if (it.op.equals(">")) {
-            if (it.src1.type.is_string()) {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sub"));
+            } else if (it.op.equals("<<")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_gt"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sll"));
+            } else if (it.op.equals(">>")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sgt"));
-            }
-        } else if (it.op.equals("<=")) {
-            if (it.src1.type.is_string()) {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sra"));
+            } else if (it.op.equals("<")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_lt"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "slt"));
+                }
+            } else if (it.op.equals(">")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_gt"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sgt"));
+                }
+            } else if (it.op.equals("<=")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_le"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sgt"));
+                    now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, new Immediate(1), "xori"));
+                }
+            } else if (it.op.equals(">=")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_ge"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "slt"));
+                    now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, new Immediate(1), "xori"));
+                }
+            } else if (it.op.equals("==")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_eq"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "xor"));
+                    now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, null, "seqz"));
+                }
+            } else if (it.op.equals("!=")) {
+                if (it.src1.type.is_string()) {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
+                    now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
+                    now_block.inst.add(new FuncCall("__std_str_ne"));
+                    now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
+                } else {
+                    it.vreg_id = new Vreg(++now_block.cnt);
+                    now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "xor"));
+                    now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, null, "snez"));
+                }
+            } else if (it.op.equals("&")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_le"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
-                it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "sgt"));
-                now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, new Immediate(1), "xori"));
-            }
-        } else if (it.op.equals(">=")) {
-            if (it.src1.type.is_string()) {
-                it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_ge"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
-                it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "slt"));
-                now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, new Immediate(1), "xori"));
-            }
-        } else if (it.op.equals("==")) {
-            if (it.src1.type.is_string()) {
-                it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_eq"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "and"));
+            } else if (it.op.equals("^")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "xor"));
-                now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, null, "seqz"));
-            }
-        } else if (it.op.equals("!=")) {
-            if (it.src1.type.is_string()) {
+            } else if (it.op.equals("|")) {
                 it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
-                now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_ne"));
-                now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
-            } else {
-                it.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "xor"));
-                now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, null, "snez"));
+                now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "or"));
             }
-        } else if (it.op.equals("&")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "and"));
-        } else if (it.op.equals("^")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "xor"));
-        } else if (it.op.equals("|")) {
-            it.vreg_id = new Vreg(++now_block.cnt);
-            now_block.inst.add(new Calculation(it.vreg_id, it.src1.vreg_id, it.src2.vreg_id, "or"));
         }
     }
 
