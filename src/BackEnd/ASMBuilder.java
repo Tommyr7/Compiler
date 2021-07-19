@@ -254,7 +254,7 @@ public class ASMBuilder implements ASTvisitor {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
                 now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_less"));
+                now_block.inst.add(new FuncCall("__std_str_lt"));
                 now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
             } else {
                 it.vreg_id = new Vreg(++now_block.cnt);
@@ -265,7 +265,7 @@ public class ASMBuilder implements ASTvisitor {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
                 now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_greater"));
+                now_block.inst.add(new FuncCall("__std_str_gt"));
                 now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
             } else {
                 it.vreg_id = new Vreg(++now_block.cnt);
@@ -276,7 +276,7 @@ public class ASMBuilder implements ASTvisitor {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
                 now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_lessequal"));
+                now_block.inst.add(new FuncCall("__std_str_le"));
                 now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
             } else {
                 it.vreg_id = new Vreg(++now_block.cnt);
@@ -288,7 +288,7 @@ public class ASMBuilder implements ASTvisitor {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
                 now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_greaterequal"));
+                now_block.inst.add(new FuncCall("__std_str_ge"));
                 now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
             } else {
                 it.vreg_id = new Vreg(++now_block.cnt);
@@ -300,7 +300,7 @@ public class ASMBuilder implements ASTvisitor {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
                 now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_equal"));
+                now_block.inst.add(new FuncCall("__std_str_eq"));
                 now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
             } else {
                 it.vreg_id = new Vreg(++now_block.cnt);
@@ -312,7 +312,7 @@ public class ASMBuilder implements ASTvisitor {
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Move(it.src1.vreg_id, new Preg("a0")));
                 now_block.inst.add(new Move(it.src2.vreg_id, new Preg("a1")));
-                now_block.inst.add(new FuncCall("__std_str_notequal"));
+                now_block.inst.add(new FuncCall("__std_str_ne"));
                 now_block.inst.add(new Move(new Preg("a0"), it.vreg_id));
             } else {
                 it.vreg_id = new Vreg(++now_block.cnt);
