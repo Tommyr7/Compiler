@@ -1,5 +1,6 @@
 import ASM.ASMBlockList;
 import AST.Programnode;
+import BackEnd.ASMBuilder;
 import FrontEnd.ASTBuilder;
 import FrontEnd.SemanticChecker;
 import FrontEnd.SymbolCollector;
@@ -44,6 +45,7 @@ public class Main {
             new SemanticChecker(global).visit(ASTroot);
             if (!codegen) return;
             ASMBlockList root = new ASMBlockList();
+            new ASMBuilder(root).visit(ASTroot);
             root.print(System.out);
         } catch (Error er) {
             System.err.println(er.toString());
