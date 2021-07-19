@@ -1,5 +1,6 @@
 package AST;
 
+import Util.Funcsymbol;
 import Util.position;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ public class Functiondef extends Defnode {
     public String id;
     public ArrayList<Vardefsubstatement> paralist = new ArrayList<>();
     public Partstatement part;
+    public Funcsymbol funcsymbol;
+    public boolean flag_return = false;
 
     public Functiondef(position _pos, Typenode _type, String _id, ArrayList<Vardefsubstatement> _paralist, Partstatement _part) {
         super(_pos);

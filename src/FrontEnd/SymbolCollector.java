@@ -72,7 +72,10 @@ public class SymbolCollector implements ASTvisitor {
         Classtype res = new Classtype(it.id);
         it.varlist.forEach(x -> x.accept(this));
         it.funclist.forEach(x -> x.accept(this));
-        if (it.constructor != null) res.constructor = new Funcsymbol(it.constructor.id);
+        if (it.constructor != null) {
+            res.constructor = new Funcsymbol(it.constructor.id);
+            it.constructor.funcsymbol = res.constructor;
+        }
         res.varmap = now_scope.var_map;
         res.funcmap = now_scope.func_map;
         now_scope = now_scope.parent_scope;
@@ -81,7 +84,8 @@ public class SymbolCollector implements ASTvisitor {
 
     @Override
     public void visit(Functiondef it) {
-        now_scope.new_function(it.id, new Funcsymbol(it.id), it.pos);
+        it.funcsymbol = new Funcsymbol(it.id);
+        now_scope.new_function(it.id, it.funcsymbol, it.pos);
     }
 
     @Override

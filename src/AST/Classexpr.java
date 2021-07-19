@@ -1,11 +1,13 @@
 package AST;
 
+import Util.Varsymbol;
 import Util.position;
 
 public class Classexpr extends Exprnode {
     public Exprnode name;
     public String id;
     public boolean flag_func = false; //to check if it is a function or a variable
+    public Varsymbol varsymbol;
 
     public Classexpr(position _pos, Exprnode _name, String _id) {
         super(_pos, true);

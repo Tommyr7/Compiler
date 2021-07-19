@@ -18,4 +18,8 @@ public class Classtype extends Type {
         if ((t instanceof Classtype) && (id.equals(((Classtype) t).id))) return true;
         return false;
     }
+
+    public int size() {
+        return 4 * varmap.size();
+    }
 }

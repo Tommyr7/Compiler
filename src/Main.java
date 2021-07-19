@@ -1,3 +1,4 @@
+import ASM.ASMBlockList;
 import AST.Programnode;
 import FrontEnd.ASTBuilder;
 import FrontEnd.SemanticChecker;
@@ -16,6 +17,15 @@ import java.io.InputStream;
 public class Main {
     public static void main(String[] args) throws Exception {
         InputStream input = System.in;
+        boolean codegen = true;
+        if (args.length > 0) {
+            for (String arg : args) {
+                switch (arg) {
+                    case "-semantic" -> codegen = false;
+                    case "-codegen" -> codegen = true;
+                }
+            }
+        }
         try {
             Programnode ASTroot;
             MxLexer lexer = new MxLexer(CharStreams.fromStream(input));
@@ -32,6 +42,9 @@ public class Main {
             new TypeCollector(global).visit(ASTroot);
             global.var_map.clear();
             new SemanticChecker(global).visit(ASTroot);
+            if (!codegen) return;
+            ASMBlockList root = new ASMBlockList();
+            root.print(System.out);
         } catch (Error er) {
             System.err.println(er.toString());
             throw new RuntimeException();

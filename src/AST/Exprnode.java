@@ -1,11 +1,13 @@
 package AST;
 
+import ASM.operand.Operand;
 import Util.Type;
 import Util.position;
 
 public abstract class Exprnode extends ASTnode {
     public Type type;
     public boolean assign = false;
+    public Operand vreg_id;
 
     public Exprnode(position _pos) {
         super(_pos);

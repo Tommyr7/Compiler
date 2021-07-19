@@ -1,10 +1,9 @@
 package FrontEnd;
 
+import ASM.operand.Immediate;
 import AST.*;
 import Util.*;
 import Util.error.semanticError;
-
-import javax.lang.model.type.ArrayType;
 
 public class SemanticChecker implements ASTvisitor {
     public Scope scope, now_scope;
@@ -39,6 +38,10 @@ public class SemanticChecker implements ASTvisitor {
         now_class = (Classtype) scope.type_map.get(it.id);
         now_class.varmap.forEach((key, value) -> now_scope.new_variable(key, value, it.pos));
         now_class.funcmap.forEach((key, value) -> now_scope.new_function(key, value, it.pos));
+        for (int i = 0; i < it.varlist.size(); i++) {
+            it.varlist.get(i).varsymbol.vreg_id = new Immediate(i);
+            it.varlist.get(i).varsymbol.flag_class = true;
+        }
         it.funclist.forEach(x -> x.accept(this));
         if (it.constructor != null) {
             if (!it.constructor.id.equals(it.id)) throw new semanticError("Wrong constructor!", it.pos);
@@ -52,13 +55,22 @@ public class SemanticChecker implements ASTvisitor {
     public void visit(Functiondef it) {
         now_scope = new Scope(now_scope);
         if (it.paralist != null)
-            it.paralist.forEach(x -> now_scope.new_variable(x.id, new Varsymbol(x.id, scope.get_type(x.type)), x.pos));
+            it.paralist.forEach(x ->
+            {
+                x.varsymbol = new Varsymbol(x.id, scope.get_type(x.type));
+                now_scope.new_variable(x.id, x.varsymbol, x.pos);
+            });
+        if (now_class != null) {
+            it.funcsymbol.id2 = now_class.id + "_function_in_class_" + it.funcsymbol.id;
+            it.funcsymbol.flag_class = true;
+        }
         flag = false;
         if (it.type == null) res_type = new Literaltype("void");
         else res_type = scope.get_type(it.type);
         it.part.accept(this);
         if (it.id.equals("main")) flag = true;
         if (!flag && it.type != null && !it.type.type.equals("void")) throw new semanticError("No return!", it.pos);
+        it.flag_return = flag;
         now_scope = now_scope.parent_scope;
     }
 
@@ -157,7 +169,9 @@ public class SemanticChecker implements ASTvisitor {
             it.expr.accept(this);
             if (!tmp.equal(it.expr.type)) throw new semanticError("Invalid initial variable!", it.pos);
         }
-        now_scope.new_variable(it.id, new Varsymbol(it.id, tmp), it.pos);
+        it.varsymbol = new Varsymbol(it.id, tmp);
+        if (now_scope == scope) it.varsymbol.is_global = true;
+        now_scope.new_variable(it.id, it.varsymbol, it.pos);
     }
 
     @Override
@@ -255,8 +269,10 @@ public class SemanticChecker implements ASTvisitor {
             if (tmp.funcmap.containsKey(it.id)) it.type = tmp.funcmap.get(it.id);
             else throw new semanticError("Function not found!", it.pos);
         } else {
-            if (tmp.varmap.containsKey(it.id)) it.type = tmp.varmap.get(it.id).type;
-            else throw new semanticError("Variable not found!", it.pos);
+            if (tmp.varmap.containsKey(it.id)) {
+                it.varsymbol = tmp.varmap.get(it.id);
+                it.type = it.varsymbol.type;
+            } else throw new semanticError("Variable not found!", it.pos);
         }
     }
 
@@ -291,6 +307,7 @@ public class SemanticChecker implements ASTvisitor {
     @Override
     public void visit(Varexpr it) {
         it.type = now_scope.get_variable(it.id, true, it.pos).type;
+        it.varsymbol = now_scope.get_variable(it.id, true, it.pos);
     }
 
     @Override
