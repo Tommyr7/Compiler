@@ -440,7 +440,7 @@ public class ASMBuilder implements ASTvisitor {
     public void visit(Stringexpr it) {
         root.strings.add(it.value);
         it.vreg_id = new Vreg(++now_block.cnt);
-        now_block.inst.add(new Li(it.vreg_id, new Symbol("Const String" + String.valueOf(root.strings.size()))));
+        now_block.inst.add(new Li(it.vreg_id, new Symbol(".const_string" + String.valueOf(root.strings.size()-1))));
     }
 
     @Override

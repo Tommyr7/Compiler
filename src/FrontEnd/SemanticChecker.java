@@ -63,7 +63,7 @@ public class SemanticChecker implements ASTvisitor {
         if (now_class != null) {
             it.funcsymbol.id2 = now_class.id + "_function_in_class_" + it.funcsymbol.id;
             it.funcsymbol.flag_class = true;
-        }
+        } else it.funcsymbol.id2=it.funcsymbol.id;
         flag = false;
         if (it.type == null) res_type = new Literaltype("void");
         else res_type = scope.get_type(it.type);
@@ -239,12 +239,14 @@ public class SemanticChecker implements ASTvisitor {
         if (it.name.type.is_string() && it.flag_func && it.id.equals("length")) {
             Funcsymbol tmp = new Funcsymbol("length");
             tmp.type = new Literaltype("int");
+            tmp.id2="__std_str_length";
             it.type = tmp;
             return;
         }
         if (it.name.type.is_string() && it.flag_func && it.id.equals("substring")) {
             Funcsymbol tmp = new Funcsymbol("substring");
             tmp.type = new Literaltype("string");
+            tmp.id2="__std_str_substring";
             tmp.para_list.add(new Varsymbol("left", new Literaltype("int")));
             tmp.para_list.add(new Varsymbol("right", new Literaltype("int")));
             it.type = tmp;
@@ -253,12 +255,14 @@ public class SemanticChecker implements ASTvisitor {
         if (it.name.type.is_string() && it.flag_func && it.id.equals("parseInt")) {
             Funcsymbol tmp = new Funcsymbol("parseInt");
             tmp.type = new Literaltype("int");
+            tmp.id2="__std_str_parseInt";
             it.type = tmp;
             return;
         }
         if (it.name.type.is_string() && it.flag_func && it.id.equals("ord")) {
             Funcsymbol tmp = new Funcsymbol("ord");
             tmp.type = new Literaltype("int");
+            tmp.id2="__std_str_ord";
             tmp.para_list.add(new Varsymbol("pos", new Literaltype("int")));
             it.type = tmp;
             return;

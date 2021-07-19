@@ -16,40 +16,47 @@ public class SymbolCollector implements ASTvisitor {
         {
             Funcsymbol tmp = new Funcsymbol("print");
             tmp.type = new Literaltype("void");
+            tmp.id2="__std_print";
             tmp.para_list.add(new Varsymbol("str", new Literaltype("string")));
             global.func_map.put("print", tmp);
         }
         {
             Funcsymbol tmp = new Funcsymbol("println");
             tmp.type = new Literaltype("void");
+            tmp.id2="__std_println";
             tmp.para_list.add(new Varsymbol("str", new Literaltype("string")));
             global.func_map.put("println", tmp);
         }
         {
             Funcsymbol tmp = new Funcsymbol("printInt");
             tmp.type = new Literaltype("void");
+            tmp.id2="__std_printInt";
             tmp.para_list.add(new Varsymbol("n", new Literaltype("int")));
             global.func_map.put("printInt", tmp);
         }
         {
             Funcsymbol tmp = new Funcsymbol("printlnInt");
             tmp.type = new Literaltype("void");
+            tmp.id2="__std_printlnInt";
             tmp.para_list.add(new Varsymbol("n", new Literaltype("int")));
             global.func_map.put("printlnInt", tmp);
         }
         {
             Funcsymbol tmp = new Funcsymbol("getInt");
             tmp.type = new Literaltype("int");
+            tmp.id2="__std_getInt";
             global.func_map.put("getInt", tmp);
         }
         {
             Funcsymbol tmp = new Funcsymbol("getString");
             tmp.type = new Literaltype("string");
+            tmp.id2="__std_getString";
             global.func_map.put("getString", tmp);
         }
         {
             Funcsymbol tmp = new Funcsymbol("toString");
             tmp.type = new Literaltype("string");
+            tmp.id2="__std_toString";
             tmp.para_list.add(new Varsymbol("i", new Literaltype("int")));
             global.func_map.put("toString", tmp);
         }
