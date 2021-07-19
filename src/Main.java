@@ -17,7 +17,7 @@ import java.io.InputStream;
 public class Main {
     public static void main(String[] args) throws Exception {
         InputStream input = System.in;
-        boolean codegen = true;
+        boolean codegen = false;
         if (args.length > 0) {
             for (String arg : args) {
                 switch (arg) {

@@ -140,7 +140,8 @@ public class SymbolCollector implements ASTvisitor {
 
     @Override
     public void visit(Vardefsubstatement it) {
-        now_scope.new_variable(it.id, new Varsymbol(it.id), it.pos);
+        it.varsymbol = new Varsymbol(it.id);
+        now_scope.new_variable(it.id, it.varsymbol, it.pos);
     }
 
     @Override
