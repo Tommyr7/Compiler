@@ -44,7 +44,7 @@ public class ASMBuilder implements ASTvisitor {
         now_block = new ASMBlock(it.funcsymbol.id2);
         root.blocks.add(now_block);
         if (!it.funcsymbol.flag_class) {
-            if (it.id.equals("Main")) {
+            if (it.id.equals("main")) {
                 flag_main = true;
                 def_var.forEach(x -> x.accept(this));
             }
