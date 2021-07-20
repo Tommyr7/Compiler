@@ -19,12 +19,22 @@ public class ASMBlock {
         prt.println("\t.type\t" + id + ", @function");
         prt.println(id + ":");
         int size = 4 * (cnt + 2);
-        prt.println("\taddi\tsp,sp,-" + String.valueOf(size));
+        if (size<2048) prt.println("\taddi\tsp,sp,-" + String.valueOf(size));
+        else
+        {
+            prt.println("\tli s1, -"+size);
+            prt.println("\tadd sp, sp, s1");
+        }
         prt.println("\tsw\tra,0(sp)");
         inst.forEach(x -> x.print(prt));
         prt.println(".Return_" + id + ":");
         prt.println("\tlw\tra,0(sp)");
-        prt.println("\taddi\tsp, sp, "+String.valueOf(size));
+        if (size<2048) prt.println("\taddi\tsp, sp, "+String.valueOf(size));
+        else
+        {
+            prt.println("\tli s1, "+size);
+            prt.println("\tadd sp, sp, s1");
+        }
         prt.println("\tjr\tra");
         prt.println("\t.size\t" + id + ", .-" + id);
     }
