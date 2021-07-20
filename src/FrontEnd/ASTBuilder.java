@@ -104,7 +104,7 @@ public class ASTBuilder extends MxBaseVisitor<ASTnode> {
 
     @Override
     public ASTnode visitClassDefstruct(MxParser.ClassDefstructContext ctx) {
-        return new Functiondef(new position(ctx), null, ctx.Identifier().getText(), null, (Partstatement) visit(ctx.part()));
+        return new Functiondef(new position(ctx), null, ctx.Identifier().getText(), new ArrayList<>(), (Partstatement) visit(ctx.part()));
     }
 
     @Override
