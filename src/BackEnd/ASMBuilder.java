@@ -50,7 +50,7 @@ public class ASMBuilder implements ASTvisitor {
             }
             for (int i = 0; i < it.paralist.size(); i++) {
                 it.paralist.get(i).varsymbol.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(new Preg("a" + i), it.paralist.get(i).varsymbol.vreg_id));
+                if (i<8) now_block.inst.add(new Move(new Preg("a" + i), it.paralist.get(i).varsymbol.vreg_id));
             }
             it.part.accept(this);
             if (it.id.equals("main") && !it.flag_return) {
@@ -62,7 +62,7 @@ public class ASMBuilder implements ASTvisitor {
             now_block.inst.add(new Move(new Preg("a0"), new Vreg(++now_block.cnt))); // this pointer is always Vreg(2)
             for (int i = 0; i < it.paralist.size(); i++) {
                 it.paralist.get(i).varsymbol.vreg_id = new Vreg(++now_block.cnt);
-                now_block.inst.add(new Move(new Preg("a" + (i + 1)), it.paralist.get(i).varsymbol.vreg_id));
+                if (i<7) now_block.inst.add(new Move(new Preg("a" + (i + 1)), it.paralist.get(i).varsymbol.vreg_id));
             }
             it.part.accept(this);
         }
@@ -355,16 +355,16 @@ public class ASMBuilder implements ASTvisitor {
             }
             now_block.inst.add(new Move(it.name.vreg_id, new Preg("a0")));
             for (int i = 0; i < it.exprlist.exprlist.size(); i++)
-                now_block.inst.add(new Move(it.exprlist.exprlist.get(i).vreg_id, new Preg("a" + (i + 1))));
+                if (i<7) now_block.inst.add(new Move(it.exprlist.exprlist.get(i).vreg_id, new Preg("a" + (i + 1))));
         } else if (((Funcsymbol) it.name.type).flag_class) {
             // it is a function in class and be called in the class
             now_block.inst.add(new Move(new Vreg(2), new Preg("a0")));
             for (int i = 0; i < it.exprlist.exprlist.size(); i++)
-                now_block.inst.add(new Move(it.exprlist.exprlist.get(i).vreg_id, new Preg("a" + (i + 1))));
+                if (i<7) now_block.inst.add(new Move(it.exprlist.exprlist.get(i).vreg_id, new Preg("a" + (i + 1))));
         } else {
             // it is a function which does not belong to any class
             for (int i = 0; i < it.exprlist.exprlist.size(); i++)
-                now_block.inst.add(new Move(it.exprlist.exprlist.get(i).vreg_id, new Preg("a" + i)));
+                if (i<8) now_block.inst.add(new Move(it.exprlist.exprlist.get(i).vreg_id, new Preg("a" + i)));
         }
         now_block.inst.add(new FuncCall(((Funcsymbol) it.name.type).id2));
         //return value
