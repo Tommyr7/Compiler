@@ -351,6 +351,7 @@ public class ASMBuilder implements ASTvisitor {
                 // check if the function is array.size()
                 it.vreg_id = new Vreg(++now_block.cnt);
                 now_block.inst.add(new Load(it.vreg_id, it.name.vreg_id));
+                return;
             }
             now_block.inst.add(new Move(it.name.vreg_id, new Preg("a0")));
             for (int i = 0; i < it.exprlist.exprlist.size(); i++)
