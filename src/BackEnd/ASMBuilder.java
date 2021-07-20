@@ -461,10 +461,11 @@ public class ASMBuilder implements ASTvisitor {
     public void visit(Arrexpr it) {
         it.base.accept(this);
         it.offset.accept(this);
-        it.vreg_id = new Vreg(++now_block.cnt);
-        now_block.inst.add(new Calculation(it.vreg_id, it.offset.vreg_id, new Immediate(1), "addi"));
-        now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, new Immediate(2), "slli"));
-        now_block.inst.add(new Calculation(it.vreg_id, it.vreg_id, it.base.vreg_id, "add"));
+        Vreg tmp=new Vreg(++now_block.cnt);
+        now_block.inst.add(new Calculation(tmp, it.offset.vreg_id, new Immediate(1), "addi"));
+        now_block.inst.add(new Calculation(tmp, tmp, new Immediate(2), "slli"));
+        now_block.inst.add(new Calculation(tmp, tmp, it.base.vreg_id, "add"));
+        it.vreg_id=new Address(tmp);
     }
 
     @Override
