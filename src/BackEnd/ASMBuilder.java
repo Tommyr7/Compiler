@@ -385,7 +385,7 @@ public class ASMBuilder implements ASTvisitor {
         else {
             Vreg tmp = new Vreg(++now_block.cnt);
             now_block.inst.add(new Calculation(tmp, it.name.vreg_id, new Immediate(((Immediate) it.varsymbol.vreg_id).val * 4), "addi"));
-            it.vreg_id = tmp;
+            it.vreg_id = new Address(tmp);
         }
     }
 
@@ -454,6 +454,7 @@ public class ASMBuilder implements ASTvisitor {
         if (it.varsymbol.flag_class) {
             Vreg tmp = new Vreg(++now_block.cnt);
             now_block.inst.add(new Calculation(tmp, new Vreg(2), new Immediate(((Immediate) it.varsymbol.vreg_id).val * 4), "addi"));
+            it.vreg_id=new Address(tmp);
         } else it.vreg_id = it.varsymbol.vreg_id;
     }
 
