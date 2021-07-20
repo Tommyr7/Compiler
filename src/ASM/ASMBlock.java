@@ -24,6 +24,7 @@ public class ASMBlock {
         inst.forEach(x -> x.print(prt));
         prt.println(".Return_" + id + ":");
         prt.println("\tlw\tra,0(sp)");
+        prt.println("\taddi\tsp, sp, "+String.valueOf(size));
         prt.println("\tjr\tra");
         prt.println("\t.size\t" + id + ", .-" + id);
     }
